@@ -1,3 +1,6 @@
+// Aluno A: Eduardo Canton - 2410837 
+// Aluno B: Pedro Augusto - 2321374
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "pilha.h"
