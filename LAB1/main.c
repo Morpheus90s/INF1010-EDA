@@ -7,35 +7,32 @@ int main(void) {
     char tipo;
     int valor;
 
-    // ==========================================
-    // PARTE 1: PROCESSANDO A FILA
-    // ==========================================
     FILE* arq_f = fopen("entrada_fila.txt", "r");
-    
-    if (arq_f != NULL) { // Proteção contra travamentos
-        Fila* f = fila_cria(); // Cria a fila antes de começar
-        
-        // Radar sensível: "%c" SEM espaço captura tudo, até o \n
-        while (fscanf(arq_f, "%c", &tipo) != EOF) {
-            
+    if (arq_f != NULL) {
+        Fila* fila = fila_cria();
+        if(fila==NULL)
+        {
+            printf("erro ao alocar memoria");
+            exit(1);
+        }
+        while (fscanf(arq_f, "%c", &tipo) != EOF) {  
             if (tipo == 'a') {
                 fscanf(arq_f, "%d", &valor); 
-                ARMAZENA(f, valor);
-                fila_imprime(f);
+                ARMAZENA(fila, valor);
+                fila_imprime(fila);
             } 
             else if (tipo == 'r') {
-                RETIRA(f);
-                fila_imprime(f);
+                RETIRA(fila);
+                fila_imprime(fila);
             } 
             else if (tipo == '\n') {
                 printf("----------\n");
-                fila_libera(f);      // Faxina: destrói a fila da linha anterior
-                f = fila_cria();     // Nasce uma nova fila para a nova linha
+                fila_libera(fila);
+                fila = fila_cria();
             }
-        }
-        
-        fclose(arq_f);      // Fecha o arquivo
-        fila_libera(f);     // Libera a última fila que sobrou na memória
+        } 
+        fclose(arq_f);
+        fila_libera(fila);
     }
 
     printf("\n\n----------------------PILHA-----------------\n\n");
@@ -43,10 +40,7 @@ int main(void) {
     
     if (arq_p != NULL) {
         Pilha* p = pilha_cria();
-        
-        // Radar sensível idêntico ao da fila para detectar o \n
-        while (fscanf(arq_p, "%c", &tipo) != EOF) {
-            
+        while (fscanf(arq_p, "%c", &tipo) != EOF) {  
             if (tipo == 'e') {
                 fscanf(arq_p, "%d", &valor);
                 PUSH(p, valor);
@@ -58,8 +52,8 @@ int main(void) {
             }
             else if (tipo == '\n') {
                 printf("----------\n");
-                pilha_libera(p);     // Faxina da pilha
-                p = pilha_cria();    // Pilha nova
+                pilha_libera(p);
+                p = pilha_cria();
             }
         }
         
