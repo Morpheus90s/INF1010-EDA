@@ -39,26 +39,26 @@ int main(void) {
     FILE* arq_p = fopen("entrada_pilha.txt", "r");
     
     if (arq_p != NULL) {
-        Pilha* p = pilha_cria();
+        Pilha* pilha = pilha_cria();
         while (fscanf(arq_p, "%c", &tipo) != EOF) {  
             if (tipo == 'e') {
                 fscanf(arq_p, "%d", &valor);
-                PUSH(p, valor);
-                pilha_imprime(p);
+                PUSH(pilha, valor);
+                pilha_imprime(pilha);
             } 
             else if (tipo == 'r') {
-                POP(p);
-                pilha_imprime(p);
+                POP(pilha);
+                pilha_imprime(pilha);
             }
             else if (tipo == '\n') {
                 printf("----------\n");
-                pilha_libera(p);
-                p = pilha_cria();
+                pilha_libera(pilha);
+                pilha = pilha_cria();
             }
         }
         
         fclose(arq_p);
-        pilha_libera(p);
+        pilha_libera(pilha);
     }
     
     return 0;
