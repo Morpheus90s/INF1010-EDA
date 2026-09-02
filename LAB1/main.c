@@ -6,35 +6,39 @@
 int main(void) {
     char tipo;
     int valor;
+
+    // ==========================================
+    // PARTE 1: PROCESSANDO A FILA
+    // ==========================================
     FILE* arq_f = fopen("entrada_fila.txt", "r");
     
-    if (arq_f != NULL) { 
-        Fila* lista = fila_cria(); 
+    if (arq_f != NULL) { // Proteção contra travamentos
+        Fila* f = fila_cria(); // Cria a fila antes de começar
         
-    
+        // Radar sensível: "%c" SEM espaço captura tudo, até o \n
         while (fscanf(arq_f, "%c", &tipo) != EOF) {
             
             if (tipo == 'a') {
                 fscanf(arq_f, "%d", &valor); 
-                ARMAZENA(lista, valor);
-                fila_imprime(lista);
+                ARMAZENA(f, valor);
+                fila_imprime(f);
             } 
             else if (tipo == 'r') {
-                RETIRA(lista);
-                fila_imprime(lista);
+                RETIRA(f);
+                fila_imprime(f);
             } 
             else if (tipo == '\n') {
                 printf("----------\n");
-                fila_libera(lista);      
-                lista = fila_cria();    
+                fila_libera(f);      // Faxina: destrói a fila da linha anterior
+                f = fila_cria();     // Nasce uma nova fila para a nova linha
             }
         }
         
-        fclose(arq_f);      
-        fila_libera(lista);   
+        fclose(arq_f);      // Fecha o arquivo
+        fila_libera(f);     // Libera a última fila que sobrou na memória
     }
 
-    printf("Pilha\n")
+    printf("\n\n----------------------PILHA-----------------\n\n");
     FILE* arq_p = fopen("entrada_pilha.txt", "r");
     
     if (arq_p != NULL) {
@@ -54,8 +58,8 @@ int main(void) {
             }
             else if (tipo == '\n') {
                 printf("----------\n");
-                pilha_libera(p);     
-                p = pilha_cria();   
+                pilha_libera(p);     // Faxina da pilha
+                p = pilha_cria();    // Pilha nova
             }
         }
         
