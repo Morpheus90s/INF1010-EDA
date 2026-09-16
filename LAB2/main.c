@@ -4,7 +4,6 @@
 
 #define TAM 10
 
-// Função auxiliar para exibir o vetor na tela
 void exibe(int v[], int n) {
     printf("[");
     for (int i = 0; i < n; i++) {
@@ -14,7 +13,6 @@ void exibe(int v[], int n) {
     printf("]\n");
 }
 
-// Algoritmo Bubble Sort clássico
 void bubbleSort(int v[], int n) {
     printf("\n--- BUBBLE SORT ---\n");
     for (int i = 0; i < n - 1; i++) {
@@ -30,7 +28,6 @@ void bubbleSort(int v[], int n) {
     }
 }
 
-// Algoritmo Selection Sort clássico
 void selectionSort(int v[], int n) {
     printf("\n--- SELECTION SORT ---\n");
     for (int i = 0; i < n - 1; i++) {
@@ -40,7 +37,7 @@ void selectionSort(int v[], int n) {
                 min = j;
             }
         }
-        // Troca o elemento atual pelo menor encontrado
+
         int temp = v[i];
         v[i] = v[min];
         v[min] = temp;
@@ -53,12 +50,29 @@ void selectionSort(int v[], int n) {
 int main(void) {
     int v1[TAM], v2[TAM];
     
-    srand(time(NULL));
+    srand(time(NULL)); // Garante uma lista inédita toda vez que o programa roda
     
-    printf("Vetor Inicial: ");
+    printf("Vetor Inicial (Sem repeticoes): ");
     for (int i = 0; i < TAM; i++) {
-        v1[i] = rand() % 101; // Gera valores de 0 a 100
-        v2[i] = v1[i];        // Clona para testar o segundo algoritmo
+        int numero_valido = 0;
+        int num;
+
+        // Fica no loop até achar um número que não esteja no vetor
+        while (!numero_valido) {
+            num = rand() % 101; 
+            numero_valido = 1; // Assume que é válido até provar o contrário
+
+            // Verifica se o número já foi inserido nas posições anteriores
+            for (int j = 0; j < i; j++) {
+                if (v1[j] == num) {
+                    numero_valido = 0; // Se achou repetido, quebra a validação
+                    break;
+                }
+            }
+        }
+
+        v1[i] = num; 
+        v2[i] = v1[i];       
     }
     exibe(v1, TAM);
 
@@ -67,3 +81,4 @@ int main(void) {
 
     return 0;
 }
+
