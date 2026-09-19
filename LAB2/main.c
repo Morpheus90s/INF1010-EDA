@@ -4,51 +4,84 @@
 
 #define TAM 10
 
+<<<<<<< HEAD
 void exibe(int v[], int n) {
     printf("[");
     for (int i = 0; i < n; i++) {
+=======
+void exibe(int v[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+>>>>>>> 6fc3eb3 (falta acertar o bubble ainda)
         printf("%d", v[i]);
-        if (i < n - 1) printf(", ");
+        if (i < n - 1)
+        {
+            printf(", ");
+        }
     }
-    printf("]\n");
 }
 
+<<<<<<< HEAD
 void bubbleSort(int v[], int n) {
     printf("\n--- BUBBLE SORT ---\n");
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - 1 - i; j++) {
             if (v[j] > v[j + 1]) {
+=======
+void bubbleSort(int v[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n - i; j++)
+        {
+            if (v[j] > v[j + 1])
+            {
+>>>>>>> 6fc3eb3 (falta acertar o bubble ainda)
                 int temp = v[j];
                 v[j] = v[j + 1];
                 v[j + 1] = temp;
             }
         }
-        printf("Iteracao %d: ", i + 1);
+        printf("\nIteracao %d: ", i + 1);
         exibe(v, n);
     }
 }
 
+<<<<<<< HEAD
 void selectionSort(int v[], int n) {
     printf("\n--- SELECTION SORT ---\n");
     for (int i = 0; i < n - 1; i++) {
+=======
+void selectionSort(int v[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+>>>>>>> 6fc3eb3 (falta acertar o bubble ainda)
         int min = i;
-        for (int j = i + 1; j < n; j++) {
-            if (v[j] < v[min]) {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (v[j] < v[min])
+            {
                 min = j;
             }
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6fc3eb3 (falta acertar o bubble ainda)
         int temp = v[i];
         v[i] = v[min];
         v[min] = temp;
-
-        printf("Iteracao %d: ", i + 1);
+        printf("\nIteracao %d: ", i + 1);
         exibe(v, n);
     }
 }
 
-int main(void) {
+int main(void)
+{
     int v1[TAM], v2[TAM];
+<<<<<<< HEAD
     
     srand(time(NULL)); // Garante uma lista inédita toda vez que o programa roda
     
@@ -73,12 +106,19 @@ int main(void) {
 
         v1[i] = num; 
         v2[i] = v1[i];       
+=======
+    srand(time(NULL));
+    
+    printf("Vetor Inicial: ");
+    for (int i = 0; i < TAM; i++)
+    {
+        v1[i] = rand() % 101;
+        v2[i] = v1[i];
+>>>>>>> 6fc3eb3 (falta acertar o bubble ainda)
     }
     exibe(v1, TAM);
-
     bubbleSort(v1, TAM);
     selectionSort(v2, TAM);
-
     return 0;
 }
 
