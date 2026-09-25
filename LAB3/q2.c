@@ -1,3 +1,6 @@
+// Aluno A: Eduardo Canton - 2410837 
+// Aluno B: Pedro Augusto - 2321374
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,6 +16,18 @@ struct avl {
     Nodo * raiz;
 };
 typedef struct avl AVL;
+
+Nodo* cria_nodo_avl(int chave) {
+    Nodo* novo = (Nodo*) malloc(sizeof(Nodo));
+    if (!novo) {
+        printf("Erro de alocacao.\n");
+        exit(1);
+    }
+    novo->chave = chave;
+    novo->fb = 0;
+    novo->esq = novo->dir = NULL;
+    return novo;
+}
 
 int altura(Nodo* n) {
     if (n == NULL) return -1;
@@ -62,11 +77,7 @@ Nodo* rotacao_dupla_direita(Nodo* p) {
 
 Nodo* avl_insere(Nodo* r, int chave, int* rot) {
     if (r == NULL) {
-        Nodo* novo = (Nodo*) malloc(sizeof(Nodo));
-        novo->chave = chave;
-        novo->fb = 0;
-        novo->esq = novo->dir = NULL;
-        return novo;
+        return cria_nodo_avl(chave);
     }
 
     if (chave < r->chave)
@@ -81,19 +92,19 @@ Nodo* avl_insere(Nodo* r, int chave, int* rot) {
     if (r->fb == 2) {
         *rot = 1;
         if (calc_fb(r->dir) >= 0) {
-            printf(" → Rotação à esquerda (RE) no nó %d\n", r->chave);
+            printf(" -> Rotacao a esquerda no no %d\n", r->chave);
             return rotacao_esquerda(r);
         } else {
-            printf(" → Rotação dupla à esquerda (RDE) no nó %d\n", r->chave);
+            printf(" -> Rotacao dupla a esquerda no no %d\n", r->chave);
             return rotacao_dupla_esquerda(r);
         }
     } else if (r->fb == -2) {
         *rot = 1;
         if (calc_fb(r->esq) <= 0) {
-            printf(" → Rotação à direita (RD) no nó %d\n", r->chave);
+            printf(" -> Rotacao a direita no no %d\n", r->chave);
             return rotacao_direita(r);
         } else {
-            printf(" → Rotação dupla à direita (RED) no nó %d\n", r->chave);
+            printf(" -> Rotacao dupla a direita no no %d\n", r->chave);
             return rotacao_dupla_direita(r);
         }
     }
@@ -115,15 +126,14 @@ Nodo* avl_remove(Nodo* r, int chave, int* rot) {
     } else if (chave > r->chave) {
         r->dir = avl_remove(r->dir, chave, rot);
     } else {
-        if (r->esq == NULL || r->dir == NULL) {
-            Nodo* temp = r->esq ? r->esq : r->dir;
-            if (temp == NULL) {
-                temp = r;
-                r = NULL;
-            } else {
-                *r = *temp;
-            }
-            free(temp);
+        if (r->esq == NULL) {
+            Nodo* temp = r->dir;
+            free(r);
+            return temp;
+        } else if (r->dir == NULL) {
+            Nodo* temp = r->esq;
+            free(r);
+            return temp;
         } else {
             Nodo* temp = maior_nodo(r->esq);
             r->chave = temp->chave;
@@ -138,19 +148,19 @@ Nodo* avl_remove(Nodo* r, int chave, int* rot) {
     if (r->fb == 2) {
         *rot = 1;
         if (calc_fb(r->dir) >= 0) {
-            printf(" → Rotação à esquerda (RE) no nó %d\n", r->chave);
+            printf(" -> Rotacao a esquerda no no %d\n", r->chave);
             return rotacao_esquerda(r);
         } else {
-            printf(" → Rotação dupla à esquerda (RDE) no nó %d\n", r->chave);
+            printf(" -> Rotacao dupla a esquerda no no %d\n", r->chave);
             return rotacao_dupla_esquerda(r);
         }
     } else if (r->fb == -2) {
         *rot = 1;
         if (calc_fb(r->esq) <= 0) {
-            printf(" → Rotação à direita (RD) no nó %d\n", r->chave);
+            printf(" -> Rotacao a direita no no %d\n", r->chave);
             return rotacao_direita(r);
         } else {
-            printf(" → Rotação dupla à direita (RED) no nó %d\n", r->chave);
+            printf(" -> Rotacao dupla a direita no no %d\n", r->chave);
             return rotacao_dupla_direita(r);
         }
     }
@@ -167,41 +177,47 @@ void imprime_arvore(Nodo* r, int nivel) {
     }
 }
 
+void libera_arvore_avl(Nodo* r) {
+    if (r != NULL) {
+        libera_arvore_avl(r->esq);
+        libera_arvore_avl(r->dir);
+        free(r);
+    }
+}
+
 int main() {
     AVL arvore;
-    // Início com a folha 50
-    arvore.raiz = (Nodo*) malloc(sizeof(Nodo));
-    arvore.raiz->chave = 50;
-    arvore.raiz->fb = 0;
-    arvore.raiz->esq = arvore.raiz->dir = NULL;
+    arvore.raiz = cria_nodo_avl(50);
 
     int elementos_ins[] = {1, 64, 12, 18, 66, 38, 95, 58, 59, 70, 43, 16, 67, 39};
     int n_ins = sizeof(elementos_ins) / sizeof(elementos_ins[0]);
 
-    printf("=== a) INSERÇÃO DE ELEMENTOS ===\n");
+    printf("=== a) INSERCAO DE ELEMENTOS ===\n");
     for (int i = 0; i < n_ins; i++) {
         int rot = 0;
         printf("Inserir %d", elementos_ins[i]);
         arvore.raiz = avl_insere(arvore.raiz, elementos_ins[i], &rot);
-        if (!rot) printf(" → sem rotação.\n");
+        if (!rot) printf(" -> sem rotacao.\n");
     }
 
-    printf("\nÁrvore AVL Completa após Inserções:\n");
+    printf("\nArvore AVL Completa apos Insercoes:\n");
     imprime_arvore(arvore.raiz, 0);
 
     int elementos_rem[] = {58, 59, 66, 18};
     int n_rem = sizeof(elementos_rem) / sizeof(elementos_rem[0]);
 
-    printf("\n=== b) REMOÇÃO DE ELEMENTOS ===\n");
+    printf("\n=== b) REMOCAO DE ELEMENTOS ===\n");
     for (int i = 0; i < n_rem; i++) {
         int rot = 0;
-        printf("Remoção %d", elementos_rem[i]);
+        printf("Remocao %d", elementos_rem[i]);
         arvore.raiz = avl_remove(arvore.raiz, elementos_rem[i], &rot);
-        if (!rot) printf(" → sem rotação.\n");
+        if (!rot) printf(" -> sem rotacao.\n");
     }
 
-    printf("\nÁrvore AVL Final após Remoções:\n");
+    printf("\nArvore AVL Final apos Remocoes:\n");
     imprime_arvore(arvore.raiz, 0);
+
+    libera_arvore_avl(arvore.raiz);
 
     return 0;
 }

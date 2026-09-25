@@ -1,3 +1,6 @@
+// Aluno A: Eduardo Canton - 2410837 
+// Aluno B: Pedro Augusto - 2321374
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,6 +19,10 @@ typedef struct abb ABB;
 
 Nodo* cria_nodo(int chave) {
     Nodo* novo = (Nodo*) malloc(sizeof(Nodo));
+    if (!novo) {
+        printf("Erro de alocacao de memoria.\n");
+        exit(1);
+    }
     novo->chave = chave;
     novo->altura = 0;
     novo->esq = NULL;
@@ -70,13 +77,21 @@ void por_nivel(Nodo* r) {
     }
 }
 
+void libera_arvore(Nodo* r) {
+    if (r != NULL) {
+        libera_arvore(r->esq);
+        libera_arvore(r->dir);
+        free(r);
+    }
+}
+
 int main() {
     ABB arvore;
     arvore.raiz = NULL;
 
     FILE* file = fopen("entrada.txt", "r");
     if (!file) {
-        printf("Erro ao abrir entrada.txt\n");
+        printf("Erro ao abrir\n");
         return 1;
     }
 
@@ -88,13 +103,15 @@ int main() {
 
     calcula_altura(arvore.raiz);
 
-    printf("Pré-ordem: ");
+    printf("Pre-ordem: ");
     pre_ordem(arvore.raiz);
-    printf("\nOrdem Simétrica: ");
+    printf("\nOrdem Simetrica: ");
     ordem_simetrica(arvore.raiz);
-    printf("\nPor nível: ");
+    printf("\nPor nivel: ");
     por_nivel(arvore.raiz);
     printf("\n");
+
+    libera_arvore(arvore.raiz);
 
     return 0;
 }
