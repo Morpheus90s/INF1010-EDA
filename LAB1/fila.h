@@ -1,5 +1,4 @@
-// Aluno A: Eduardo Canton - 2410837 
-// Aluno B: Pedro Augusto - 2321374
+cczz
 
 typedef struct fila Fila;
 

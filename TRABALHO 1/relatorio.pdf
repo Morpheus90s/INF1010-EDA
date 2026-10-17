@@ -1,0 +1,37 @@
+ Aluno A: Eduardo Canton - 2410837 
+ Aluno B: Pedro Augusto - 2321374
+
+Objetivo:
+O trabalho consiste em desenvolver um sistema dinâmico para gerenciar a fila de espera na venda de ingressos de um time de futebol. O programa deve organizar os torcedores com base em três níveis de prioridade (Sócio Torcedor A, Sócio Torcedor B e Venda Geral G), garantindo que os torcedores de categorias prioritárias passem à frente na fila. Além disso, quando houver torcedores com o mesmo nível de prioridade, o sistema deve respeitar rigorosamente a ordem cronológica de chegada ao posto de atendimento.
+
+Estrutura do programa:
+O programa foi estruturado utilizando o conceito de Tipo Abstrato de Dados (TAD) e dividido em três arquivos para separar a interface da implementação:
+
+fila.h: Módulo de interface (cabeçalho). Ele define o tipo opaco Fila e os protótipos das funções públicas que podem ser chamadas no programa (fila_cria, fila_insere, fila_remove, fila_imprime e fila_libera).
+
+fila.c: Módulo de implementação. Contém a definição das estruturas de dados internas: a struct no (representando cada elemento da lista encadeada) e a struct fila (que armazena os ponteiros para o início da lista e os contadores numéricos exigidos). Nele está implementada toda a lógica de negócio, especialmente a inserção ordenada e a remoção com o ajuste de ponteiros e liberação de memória.
+
+main.c: Módulo principal. Contém a função main, que faz a leitura padronizada das entradas e saídas (operações 'i' ou 'e'), invoca as funções do TAD correspondentes para processar as chegadas e atendimentos, e gerencia o fluxo de execução do programa de vendas.
+
+Solução:
+A resolução do problema foi baseada na manipulação de uma Lista Encadeada Simples. O passo a passo do funcionamento ocorre da seguinte maneira:
+
+O programa inicia chamando fila_cria(), alocando dinamicamente a estrutura principal da fila e inicializando todos os contadores de categoria com zero.
+
+O sistema entra em um laço de repetição (while) no arquivo main.c, que lê entradas no formato operação-id-categoria até o fim dos dados.
+
+Se a operação for uma inclusão (i), a função fila_insere() é acionada. Foi criada uma função auxiliar interna que atribui pesos às categorias (A=3, B=2, G=1). A função percorre a lista encadeada usando dois ponteiros (um atual e um anterior) até encontrar um nó cuja prioridade seja estritamente menor que a do novo torcedor. Ao usar a condição <= ou >= adequada, garantimos que torcedores novos da categoria 'A', por exemplo, entrem atrás dos torcedores 'A' que já estavam na lista, mantendo a regra de FIFO (First In, First Out) entre os pares. Os contadores totais e individuais são incrementados.
+
+Se a operação for uma exclusão/atendimento (e), a função fila_remove() localiza o nó correspondente buscando pelo ID e categoria. Ao encontrá-lo, desconecta o nó da estrutura ajustando o ponteiro prox do nó anterior, atualiza os contadores, e aplica free() na memória alocada do nó removido.
+
+Após cada exclusão, o programa invoca fila_imprime() para exibir o total atualizado e o status da fila varrendo todos os nós do primeiro ao último, garantindo o padrão de saída visualizado no exemplo abaixo:
+
+Exemplo de Saída Gerada:
+
+
+
+Observações e conclusões:
+O padrão de projeto em TAD facilitou o encapsulamento e o isolamento da manipulação direta dos nós, o que gerou um código seguro.
+A principal facilidade encontrada foi a manipulação de contadores e da impressão, pois registrar a quantidade de usuários diretamente na estrutura cabeçalho da fila economiza custo computacional (evita percorrer toda a lista apenas para contagem).
+A principal dificuldade enfrentada foi garantir a "estabilidade" da ordenação durante a inserção, ou seja, impedir que a ordem de chegada de torcedores com a mesma prioridade fosse invertida. Isso exigiu atenção redobrada na travessia com laço condicional dentro do método fila_insere.
+O programa foi compilado utilizando o GCC no ambiente Linux/Codespaces (comando: gcc -Wall main.c fila.c -o venda_ingressos). A execução transcorreu perfeitamente (comando: ./venda_ingressos). Testes cobrindo inclusões intercaladas, remoção no início, meio e fim da fila funcionaram corretamente e o programa não apresentou vazamentos de memória (segmentation fault) ou comportamentos indesejados, cumprindo integralmente os requisitos do enunciado.
