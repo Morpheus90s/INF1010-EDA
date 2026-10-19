@@ -1,3 +1,5 @@
+//Eduardo Canton Ferreira e Silva 2410837
+//Pedro Augusto Beserra da Silva 2321374
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

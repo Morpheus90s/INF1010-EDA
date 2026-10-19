@@ -5,13 +5,15 @@
 #include <stdlib.h>
 #include "fila.h"
 
-typedef struct no {
+typedef struct no
+{
     int id;
     char cat;
     struct no* prox;
 } No;
 
-struct fila {
+struct fila
+{
     No* prim;
     int qtd_A;
     int qtd_B;
@@ -19,9 +21,14 @@ struct fila {
     int total;
 };
 
-Fila* fila_cria(void) {
+Fila* fila_cria(void)
+{
     Fila* f = (Fila*) malloc(sizeof(Fila));
-    if (f == NULL) exit(1);
+    if (f == NULL)
+    {
+        printf("erro ao alocar memoria");
+        exit(1);
+    }
     f->prim = NULL;
     f->qtd_A = 0;
     f->qtd_B = 0;
@@ -30,16 +37,22 @@ Fila* fila_cria(void) {
     return f;
 }
 
-static int prioridade(char cat) {
+static int prioridade(char cat)
+{
     if (cat == 'A') return 3;
     if (cat == 'B') return 2;
     if (cat == 'G') return 1;
     return 0;
 }
 
-void fila_insere(Fila* f, int id, char cat) {
+void fila_insere(Fila* f, int id, char cat)
+{
     No* novo = (No*) malloc(sizeof(No));
-    if (novo == NULL) exit(1);
+    if (novo == NULL) 
+    {
+        printf("erro ao alocar memoria");
+        exit(1);
+    }
     novo->id = id;
     novo->cat = cat;
     novo->prox = NULL;
@@ -49,7 +62,8 @@ void fila_insere(Fila* f, int id, char cat) {
     else if (cat == 'G') f->qtd_G++;
     f->total++;
 
-    if (f->prim == NULL) {
+    if (f->prim == NULL)
+    {
         f->prim = novo;
         return;
     }
@@ -58,57 +72,81 @@ void fila_insere(Fila* f, int id, char cat) {
     No* ant = NULL;
     No* p = f->prim;
 
-    while (p != NULL && prioridade(p->cat) >= prio_novo) {
+    while (p != NULL && prioridade(p->cat) >= prio_novo)
+    {
         ant = p;
         p = p->prox;
     }
 
-    if (ant == NULL) { 
+    if (ant == NULL)
+    { 
         novo->prox = f->prim;
         f->prim = novo;
-    } else {
+    }
+    else
+    {
         novo->prox = ant->prox;
         ant->prox = novo;
     }
 }
 
-void fila_remove(Fila* f, int id, char cat) {
+void fila_remove(Fila* f, int id, char cat)
+{
     No* ant = NULL;
     No* p = f->prim;
 
-    while (p != NULL && (p->id != id || p->cat != cat)) {
+    while (p != NULL && (p->id != id || p->cat != cat))
+    {
         ant = p;
         p = p->prox;
     }
 
-    if (p == NULL) return; 
+    if (p == NULL)
+    {
+        return;
+    }
 
-    if (ant == NULL) {
+    if (ant == NULL)
+    {
         f->prim = p->prox;
-    } else {
+    }
+    else
+    {
         ant->prox = p->prox;
     }
 
-    if (p->cat == 'A') f->qtd_A--;
-    else if (p->cat == 'B') f->qtd_B--;
-    else if (p->cat == 'G') f->qtd_G--;
+    if (p->cat == 'A')
+    {
+        f->qtd_A--;
+    }
+    else if (p->cat == 'B')
+    {
+        f->qtd_B--;
+    }
+    else if (p->cat == 'G')
+    {
+        f->qtd_G--;
+    }
     f->total--;
-
     free(p);
 }
 
-void fila_imprime(Fila* f) {
-    printf("Total: %d - A: %d B: %d G: %d\n", f->total, f->qtd_A, f->qtd_B, f->qtd_G);
+void fila_imprime(Fila* f)
+{
+    printf("Total: %d - A: %d - B: %d - G: %d\n", f->total, f->qtd_A, f->qtd_B, f->qtd_G);
     No* p = f->prim;
-    while (p != NULL) {
+    while (p != NULL)
+    {
         printf("%d-%c\n", p->id, p->cat);
         p = p->prox;
     }
 }
 
-void fila_libera(Fila* f) {
+void fila_libera(Fila* f)
+{
     No* p = f->prim;
-    while (p != NULL) {
+    while (p != NULL)
+    {
         No* t = p->prox;
         free(p);
         p = t;
