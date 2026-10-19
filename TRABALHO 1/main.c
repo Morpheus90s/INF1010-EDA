@@ -9,24 +9,24 @@ int main(void) {
     char operacao, categoria;
     int id;
     
-    int ultima_operacao_foi_e = 0;
-    int leu_alguma_coisa = 0; 
+    int ultima = 0;
+    int leu = 0; 
 
     while (scanf(" %c-%d-%c", &operacao, &id, &categoria) == 3) {
-        leu_alguma_coisa = 1; 
+        leu = 1; 
 
         if (operacao == 'i') {
             fila_insere(fila, id, categoria);
-            ultima_operacao_foi_e = 0;
+            ultima = 0;
         } 
         else if (operacao == 'e') {
             fila_remove(fila, id, categoria);
             fila_imprime(fila); 
-            ultima_operacao_foi_e = 1;
+            ultima = 1;
         }
     }
 
-    if (leu_alguma_coisa && !ultima_operacao_foi_e) {
+    if (leu && !ultima) {
         fila_imprime(fila);
     }
 
