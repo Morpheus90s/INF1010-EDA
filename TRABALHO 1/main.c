@@ -4,32 +4,35 @@
 #include <stdio.h>
 #include "fila.h"
 
-int main(void) {
+int main(void)
+{
     Fila* fila = fila_cria();
     char operacao, categoria;
     int id;
-    
-    int ultima = 0;
-    int leu = 0; 
 
-    while (scanf(" %c-%d-%c", &operacao, &id, &categoria) == 3) {
-        leu = 1; 
+    int ultimo = 0;
+    int entrada = 0; 
 
-        if (operacao == 'i') {
+    while (scanf(" %c-%d-%c", &operacao, &id, &categoria) == 3)
+    {
+        entrada = 1; 
+
+        if (operacao == 'i')
+        {
             fila_insere(fila, id, categoria);
-            ultima = 0;
+            ultimo = 0;
         } 
-        else if (operacao == 'e') {
+        else if (operacao == 'e')
+        {
             fila_remove(fila, id, categoria);
             fila_imprime(fila); 
-            ultima = 1;
+            ultimo = 1;
         }
     }
-
-    if (leu && !ultima) {
+    if (entrada && !ultimo)
+    {
         fila_imprime(fila);
     }
-
     fila_libera(fila);
     return 0;
 }

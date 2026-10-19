@@ -8,7 +8,7 @@
 typedef struct no
 {
     int id;
-    char cat;
+    char categoria;
     struct no* prox;
 } No;
 
@@ -37,15 +37,15 @@ Fila* fila_cria(void)
     return f;
 }
 
-static int prioridade(char cat)
+static int prioridade(char categoria)
 {
-    if (cat == 'A') return 3;
-    if (cat == 'B') return 2;
-    if (cat == 'G') return 1;
+    if (categoria == 'A') return 3;
+    if (categoria == 'B') return 2;
+    if (categoria == 'G') return 1;
     return 0;
 }
 
-void fila_insere(Fila* f, int id, char cat)
+void fila_insere(Fila* f, int id, char categoria)
 {
     No* novo = (No*) malloc(sizeof(No));
     if (novo == NULL) 
@@ -54,12 +54,12 @@ void fila_insere(Fila* f, int id, char cat)
         exit(1);
     }
     novo->id = id;
-    novo->cat = cat;
+    novo->categoria = categoria;
     novo->prox = NULL;
 
-    if (cat == 'A') f->qtd_A++;
-    else if (cat == 'B') f->qtd_B++;
-    else if (cat == 'G') f->qtd_G++;
+    if (categoria == 'A') f->qtd_A++;
+    else if (categoria == 'B') f->qtd_B++;
+    else if (categoria == 'G') f->qtd_G++;
     f->total++;
 
     if (f->prim == NULL)
@@ -68,11 +68,11 @@ void fila_insere(Fila* f, int id, char cat)
         return;
     }
 
-    int prio_novo = prioridade(cat);
+    int prio_novo = prioridade(categoria);
     No* ant = NULL;
     No* p = f->prim;
 
-    while (p != NULL && prioridade(p->cat) >= prio_novo)
+    while (p != NULL && prioridade(p->categoria) >= prio_novo)
     {
         ant = p;
         p = p->prox;
@@ -90,12 +90,12 @@ void fila_insere(Fila* f, int id, char cat)
     }
 }
 
-void fila_remove(Fila* f, int id, char cat)
+void fila_remove(Fila* f, int id, char categoria)
 {
     No* ant = NULL;
     No* p = f->prim;
 
-    while (p != NULL && (p->id != id || p->cat != cat))
+    while (p != NULL && (p->id != id || p->categoria != categoria))
     {
         ant = p;
         p = p->prox;
@@ -115,15 +115,15 @@ void fila_remove(Fila* f, int id, char cat)
         ant->prox = p->prox;
     }
 
-    if (p->cat == 'A')
+    if (p->categoria == 'A')
     {
         f->qtd_A--;
     }
-    else if (p->cat == 'B')
+    else if (p->categoria == 'B')
     {
         f->qtd_B--;
     }
-    else if (p->cat == 'G')
+    else if (p->categoria == 'G')
     {
         f->qtd_G--;
     }
@@ -137,7 +137,7 @@ void fila_imprime(Fila* f)
     No* p = f->prim;
     while (p != NULL)
     {
-        printf("%d-%c\n", p->id, p->cat);
+        printf("%d-%c\n", p->id, p->categoria);
         p = p->prox;
     }
 }
