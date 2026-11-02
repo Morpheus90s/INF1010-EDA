@@ -103,7 +103,7 @@ void intervalo(Pagina *pagina, int lim_inf, int lim_sup)
 
     for (int i = 0; i < pagina->n_chaves; i++)
     {
-        if (pagina->chave[i] > lim_inf && pagina->chave[i] < lim_sup)
+        if (pagina->chave[i] >= lim_inf && pagina->chave[i] <= lim_sup)
         {
             printf("%d ", pagina->chave[i]);
         }
@@ -114,6 +114,18 @@ int main(void)
 {
     B_Tree *arvore = monta();
     intervalo(arvore->raiz, 45, 135);
-    printf("\n");
+    printf("\n\n");
+
+    printf("Teste A:\n");
+    intervalo(arvore->raiz, 5, 300);
+    printf("\n\n");
+
+    printf("Teste B:\n");
+    intervalo(arvore->raiz, 50, 100);
+    printf("\n\n");
+
+    printf("Teste C:\n");
+    intervalo(arvore->raiz, 70, 135);
+    printf("\n\n");
     return 0;
 }
