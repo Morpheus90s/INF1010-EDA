@@ -103,7 +103,7 @@ void intervalo(Pagina *pagina, int lim_inf, int lim_sup)
 
     for (int i = 0; i < pagina->n_chaves; i++)
     {
-        if (pagina->chave[i] >= lim_inf && pagina->chave[i] <= lim_sup)
+        if (pagina->chave[i] > lim_inf && pagina->chave[i] < lim_sup)
         {
             printf("%d ", pagina->chave[i]);
         }
