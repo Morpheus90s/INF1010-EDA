@@ -1,35 +1,37 @@
 #include <stdio.h>
-
 typedef unsigned char Permissions;
 
-void grantPermission(Permissions *p, int bit) {
+void grantPermission(Permissions *p, int bit)
+{
     *p = *p | (1 << bit);
 }
 
-void revokePermission(Permissions *p, int bit) {
+void revokePermission(Permissions *p, int bit)
+{
     *p = *p & ~(1 << bit);
 }
 
-int hasPermission(Permissions p, int bit) {
+int hasPermission(Permissions p, int bit)
+{
     return (p & (1 << bit)) != 0;
 }
 
-void showPermissions(Permissions p) {
-    const char* nomes_perm[] = {
-        "leitura", "escrita", "execução", "apagar", 
-        "criar", "compartilhar", "administrar", "configurações"
-    };
-
+void showPermissions(Permissions p)
+{
+    const char* nomes_perm[] = {"leitura", "escrita", "execução", "apagar", "criar", "compartilhar", "administrar", "configurações"};
     printf("{ ");
-    for (int i = 0; i < 8; i++) {
-        if (hasPermission(p, i)) {
+    for (int i = 0; i < 8; i++)
+    {
+        if (hasPermission(p, i)) 
+        {
             printf("%s ", nomes_perm[i]);
         }
     }
     printf("}\n");
 }
 
-int main() {
+int main(void)
+{
     Permissions user1 = 0; 
     Permissions user2 = 0;
 
@@ -57,6 +59,5 @@ int main() {
 
     printf("Usuario 1 pode apagar arquivos? %s\n",
            hasPermission(user1, 3) ? "Sim" : "Não");
-
     return 0;
 }
