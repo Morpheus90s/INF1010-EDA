@@ -1,0 +1,9 @@
+REDE DE FIBRA OPTICA (KRUSKAL)
+Industrial Universitario: 1 km
+Lagoa Morada: 2 km
+Bosque Aeroporto: 3 km
+Centro Jardim: 4 km
+Morada Universitario: 6 km
+Lagoa Bosque: 7 km
+Centro Industrial: 8 km
+Total de cabo: 31 km

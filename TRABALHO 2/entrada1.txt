@@ -1,0 +1,22 @@
+8 12
+Centro
+Jardim
+Industrial
+Lagoa
+Morada
+Universitario
+Bosque
+Aeroporto
+0 1 4
+0 2 8
+1 2 11
+1 3 8
+2 4 7
+2 5 1
+3 4 2
+3 6 7
+4 5 6
+4 6 9
+5 7 10
+6 7 3
+0

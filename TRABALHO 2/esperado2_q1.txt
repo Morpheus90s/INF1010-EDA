@@ -1,0 +1,6 @@
+REDE DE FIBRA OPTICA (KRUSKAL)
+Prainha Colina: 2 km
+Porto Vila: 5 km
+Porto Serra: 5 km
+Vila Prainha: 5 km
+Total de cabo: 17 km

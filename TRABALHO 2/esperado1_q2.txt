@@ -1,0 +1,10 @@
+ROTAS DA AMBULANCIA (DIJKSTRA)
+origem: Centro
+Centro: 0 km | Centro
+Jardim: 4 km | Centro -> Jardim
+Industrial: 8 km | Centro -> Industrial
+Lagoa: 12 km | Centro -> Jardim -> Lagoa
+Morada: 14 km | Centro -> Jardim -> Lagoa -> Morada
+Universitario: 9 km | Centro -> Industrial -> Universitario
+Bosque: 19 km | Centro -> Jardim -> Lagoa -> Bosque
+Aeroporto: 19 km | Centro -> Industrial -> Universitario -> Aeroporto

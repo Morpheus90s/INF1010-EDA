@@ -1,0 +1,7 @@
+ROTAS DA AMBULANCIA (DIJKSTRA)
+origem: Porto
+Porto: 0 km | Porto
+Vila: 5 km | Porto -> Vila
+Serra: 5 km | Porto -> Serra
+Prainha: 10 km | Porto -> Prainha
+Colina: 12 km | Porto -> Prainha -> Colina
