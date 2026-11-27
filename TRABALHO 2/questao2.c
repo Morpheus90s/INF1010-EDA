@@ -1,123 +1,152 @@
-/*
- * Trabalho 2 - INF1010 (Estruturas de Dados Avancadas) - 2026.2
- * Questao 2: Rotas da Ambulancia (Algoritmo de Dijkstra)
- * Nome: Pedro Augusto Beserra da Silva
- * Matricula: [Sua Matricula]
- */
+// Aluno A: Eduardo Canton - 2410837 
+// Aluno B: Pedro Augusto - 2321374
 
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct viz Viz;
-struct viz {
-    int noj;
+typedef struct l Vizinho;
+struct l
+{
+    int bairro;
     int peso;
-    Viz* prox;
+    Vizinho* prox;
 };
 
-typedef struct _grafo {
-    int nv;
-    int na;
-    Viz** viz;
+typedef struct grafo
+{
+    int qntd;
+    Vizinho** l;
 } Grafo;
 
-typedef struct {
+typedef struct
+{
     int v;
     long long dist;
 } NoHeap;
 
-typedef struct {
+typedef struct
+{
     NoHeap* dados;
     int tam;
     int cap;
 } Heap;
 
-Viz* cria_viz(int noj, int peso, Viz* prox) {
-    Viz* novo = (Viz*)malloc(sizeof(Viz));
-    novo->noj = noj;
+Vizinho* cria_viz(int bairro, int peso, Vizinho* prox)
+{
+    Vizinho* novo = (Vizinho*)malloc(sizeof(Vizinho));
+    novo->bairro = bairro;
     novo->peso = peso;
     novo->prox = prox;
     return novo;
 }
 
-Grafo* cria_grafo(int nv) {
+Grafo* cria_grafo(int qntd)
+{
     Grafo* g = (Grafo*)malloc(sizeof(Grafo));
-    g->nv = nv;
-    g->na = 0;
-    g->viz = (Viz**)calloc(nv, sizeof(Viz*));
+    g->qntd = qntd;
+    g->l = (Vizinho**)malloc(qntd * sizeof(Vizinho*));
+    for (int i = 0; i < qntd; i++)
+    {
+        g->l[i] = NULL;
+    }
     return g;
 }
 
-void insere_aresta(Grafo* g, int u, int v, int peso) {
-    g->viz[u] = cria_viz(v, peso, g->viz[u]);
-    g->viz[v] = cria_viz(u, peso, g->viz[v]);
-    g->na++;
+void insere_aresta(Grafo* g, int u, int v, int peso)
+{
+    g->l[u] = cria_viz(v, peso, g->l[u]);
+    g->l[v] = cria_viz(u, peso, g->l[v]);
 }
 
-void libera_grafo(Grafo* g) {
-    for (int i = 0; i < g->nv; i++) {
-        Viz* p = g->viz[i];
-        while (p != NULL) {
-            Viz* t = p->prox;
+void libera_grafo(Grafo* g)
+{
+    for (int i = 0; i < g->qntd; i++) 
+    {
+        Vizinho* p = g->l[i];
+        while (p != NULL)
+        {
+            Vizinho* t = p->prox;
             free(p);
             p = t;
         }
     }
-    free(g->viz);
+    free(g->l);
     free(g);
 }
 
-Heap* cria_heap(int cap) {
+Heap* cria_heap(int cap)
+{
     Heap* h = (Heap*)malloc(sizeof(Heap));
     h->tam = 0;
-    h->cap = cap > 0 ? cap : 4;
+    if (cap > 0)
+    {
+        h->cap = cap;
+    }
+    else
+    {
+        h->cap = 4;
+    }
     h->dados = (NoHeap*)malloc(h->cap * sizeof(NoHeap));
     return h;
 }
 
-void troca(NoHeap* a, NoHeap* b) {
-    NoHeap aux = *a;
+void troca(NoHeap* a, NoHeap* b)
+{
+    NoHeap atual = *a;
     *a = *b;
-    *b = aux;
+    *b = atual;
 }
 
-void sobe(Heap* h, int i) {
-    while (i > 0) {
+void sobe(Heap* h, int i)
+{
+    while (i > 0)
+    {
         int pai = (i - 1) / 2;
-        if (h->dados[i].dist < h->dados[pai].dist) {
+        if (h->dados[i].dist < h->dados[pai].dist)
+        {
             troca(&h->dados[i], &h->dados[pai]);
             i = pai;
-        } else {
+        } else
+        {
             break;
         }
     }
 }
 
-void desce(Heap* h, int i) {
-    while (1) {
+void desce(Heap* h, int i)
+{
+    while (1)
+    {
         int esq = 2 * i + 1;
         int dir = 2 * i + 2;
         int menor = i;
 
-        if (esq < h->tam && h->dados[esq].dist < h->dados[menor].dist) {
+        if (esq < h->tam && h->dados[esq].dist < h->dados[menor].dist)
+        {
             menor = esq;
         }
-        if (dir < h->tam && h->dados[dir].dist < h->dados[menor].dist) {
+        if (dir < h->tam && h->dados[dir].dist < h->dados[menor].dist)
+        {
             menor = dir;
         }
 
-        if (menor != i) {
+        if (menor != i)
+        {
             troca(&h->dados[i], &h->dados[menor]);
             i = menor;
-        } else {
+        }
+        else
+        {
             break;
         }
     }
 }
 
-void insere_heap(Heap* h, int v, long long dist) {
-    if (h->tam == h->cap) {
+void insere_heap(Heap* h, int v, long long dist)
+{
+    if (h->tam == h->cap)
+    {
         h->cap *= 2;
         h->dados = (NoHeap*)realloc(h->dados, h->cap * sizeof(NoHeap));
     }
@@ -127,107 +156,132 @@ void insere_heap(Heap* h, int v, long long dist) {
     h->tam++;
 }
 
-NoHeap retira_min(Heap* h) {
+NoHeap retira_min(Heap* h)
+{
     NoHeap topo = h->dados[0];
     h->tam--;
-    if (h->tam > 0) {
+    if (h->tam > 0)
+    {
         h->dados[0] = h->dados[h->tam];
         desce(h, 0);
     }
     return topo;
 }
 
-void libera_heap(Heap* h) {
+void libera_heap(Heap* h)
+{
     free(h->dados);
     free(h);
 }
 
-void dijkstra(Grafo* g, int origem, long long* dist, int* ant) {
-    int n = g->nv;
-    for (int i = 0; i < n; i++) {
+void dijkstra(Grafo* g, int origem, long long* dist, int* ant)
+{
+    int n = g->qntd;
+    for (int i = 0; i < n; i++)
+    {
         dist[i] = LLONG_MAX;
         ant[i] = -1;
     }
 
-    Heap* pq = cria_heap(n + 1);
+    Heap* prioridade = cria_heap(n + 1);
     dist[origem] = 0;
-    insere_heap(pq, origem, 0);
+    insere_heap(prioridade, origem, 0);
 
-    while (pq->tam > 0) {
-        NoHeap atual = retira_min(pq);
+    while (prioridade->tam > 0)
+    {
+        NoHeap atual = retira_min(prioridade);
         int u = atual.v;
 
-        if (atual.dist > dist[u]) continue;
-
-        for (Viz* p = g->viz[u]; p != NULL; p = p->prox) {
-            int v = p->noj;
+        if (atual.dist > dist[u])
+        {
+            continue;
+        }
+        for (Vizinho* p = g->l[u]; p != NULL; p = p->prox)
+        {
+            int v = p->bairro;
             long long nova_dist = dist[u] + p->peso;
 
-            if (nova_dist < dist[v]) {
+            if (nova_dist < dist[v])
+            {
                 dist[v] = nova_dist;
                 ant[v] = u;
-                insere_heap(pq, v, nova_dist);
-            } else if (nova_dist == dist[v] && u < ant[v]) {
+                insere_heap(prioridade, v, nova_dist);
+            }
+            else if (nova_dist == dist[v] && u < ant[v])
+            {
                 ant[v] = u;
             }
         }
     }
-
-    libera_heap(pq);
+    libera_heap(prioridade);
 }
 
-int main(void) {
+int main(void)
+{
     int n, m, h;
     if (scanf("%d %d", &n, &m) != 2) return 1;
 
     char** bairros = (char**)malloc(n * sizeof(char*));
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         bairros[i] = (char*)malloc(32 * sizeof(char));
-        if (scanf("%31s", bairros[i]) != 1) return 1;
+        if (scanf("%31s", bairros[i]) != 1)
+        {
+            return 1;
+        }
     }
 
     Grafo* g = cria_grafo(n);
-    for (int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++)
+    {
         int u, v, d;
-        if (scanf("%d %d %d", &u, &v, &d) != 3) return 1;
+        if (scanf("%d %d %d", &u, &v, &d) != 3)
+        {
+            return 1;
+        }
         insere_aresta(g, u, v, d);
     }
 
-    if (scanf("%d", &h) != 1) return 1;
+    if (scanf("%d", &h) != 1)
+    {
+        return 1;
+    }
 
     long long* dist = (long long*)malloc(n * sizeof(long long));
     int* ant = (int*)malloc(n * sizeof(int));
-    int* cam = (int*)malloc(n * sizeof(int));
+    int* caminho = (int*)malloc(n * sizeof(int));
 
     dijkstra(g, h, dist, ant);
-
-    printf("ROTAS DA AMBULANCIA (DIJKSTRA)\n");
-    printf("origem: %s\n", bairros[h]);
-
-    for (int i = 0; i < n; i++) {
+    printf("ROTAS DA AMBULANCIA (DIJKSTRA) - origem: %s\n", bairros[h]);
+    for (int i = 0; i < n; i++)
+    {
         int tam = 0;
-        int aux = i;
-        while (aux != -1) {
-            cam[tam++] = aux;
-            aux = ant[aux];
+        int atual = i;
+        while (atual != -1)
+        {
+            caminho[tam++] = atual;
+            atual = ant[atual];
         }
 
         printf("%s: %lld km | ", bairros[i], dist[i]);
-        for (int j = tam - 1; j >= 0; j--) {
-            printf("%s", bairros[cam[j]]);
-            if (j > 0) printf(" -> ");
+        for (int j = tam - 1; j >= 0; j--)
+        {
+            printf("%s", bairros[caminho[j]]);
+            if (j > 0)
+            {
+                printf(" -> ");
+            }
         }
         printf("\n");
     }
-
-    free(cam);
+    free(caminho);
     free(ant);
     free(dist);
     libera_grafo(g);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         free(bairros[i]);
     }
     free(bairros);
-
     return 0;
 }
